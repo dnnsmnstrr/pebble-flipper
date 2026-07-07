@@ -11,16 +11,38 @@ static GBitmap *s_image_bitmap;
 static GFont s_time_font;
 static GFont s_date_font;
 
-static int s_image_color = 0;
+#define SETTINGS_KEY 1
+
+typedef struct ClaySettings {
+    int image_color;
+} ClaySettings;
+
+static ClaySettings s_settings;
 
 #define KEY_IMAGE_COLOR MESSAGE_KEY_IMAGE_COLOR
-#define PERSIST_KEY_IMAGE_COLOR 1
+
+static void apply_color_scheme();
+static void update_time(void);
+static void prv_update_display(void);
+
+static void prv_default_settings(void) {
+    s_settings.image_color = 0;
+}
+
+static void prv_save_settings(void) {
+    persist_write_data(SETTINGS_KEY, &s_settings, sizeof(s_settings));
+}
+
+static void prv_load_settings(void) {
+    prv_default_settings();
+    persist_read_data(SETTINGS_KEY, &s_settings, sizeof(s_settings));
+}
 
 static void load_image() {
     if (s_image_bitmap) {
         gbitmap_destroy(s_image_bitmap);
     }
-    switch (s_image_color) {
+    switch (s_settings.image_color) {
         case 1:
             s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_ORANGE);
             break;
@@ -36,8 +58,19 @@ static void load_image() {
     }
 }
 
+static void prv_update_display(void) {
+    update_time();
+    load_image();
+    apply_color_scheme();
+}
+
+static void update_settings(void) {
+    prv_save_settings();
+    prv_update_display();
+}
+
 static void apply_color_scheme() {
-    if (s_image_color == 2) {
+    if (s_settings.image_color == 2) {
         window_set_background_color(s_main_window, GColorWhite);
         text_layer_set_text_color(s_time_layer, GColorBlack);
         text_layer_set_text_color(s_date_layer, GColorBlack);
@@ -51,10 +84,8 @@ static void apply_color_scheme() {
 static void inbox_received_callback(DictionaryIterator *iter, void *context) {
     Tuple *t = dict_find(iter, KEY_IMAGE_COLOR);
     if (t) {
-        s_image_color = t->value->uint8;
-        persist_write_int(PERSIST_KEY_IMAGE_COLOR, s_image_color);
-        load_image();
-        apply_color_scheme();
+        s_settings.image_color = t->value->uint8;
+        update_settings();
     }
 }
 
@@ -91,8 +122,6 @@ static void main_window_load(Window *window) {
     s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_JERSEY_56));
     s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_32));
 
-    s_image_color = persist_exists(PERSIST_KEY_IMAGE_COLOR) ? persist_read_int(PERSIST_KEY_IMAGE_COLOR) : 0;
-
     int time_height = 56;
     int date_height = 40;
     int time_y = -4;
@@ -115,8 +144,7 @@ static void main_window_load(Window *window) {
     bitmap_layer_set_compositing_mode(s_image_layer, GCompOpSet);
     bitmap_layer_set_alignment(s_image_layer, GAlignCenter);
 
-    apply_color_scheme();
-    load_image();
+    prv_update_display();
 
     layer_add_child(window_layer, bitmap_layer_get_layer(s_image_layer));
     layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
@@ -133,6 +161,8 @@ static void main_window_unload(Window *window) {
 }
 
 static void init() {
+    prv_load_settings();
+
     s_main_window = window_create();
 
     window_set_background_color(s_main_window, GColorBlack);
