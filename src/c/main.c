@@ -42,49 +42,44 @@ static void main_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
-  // Load custom fonts
+  // Custom fonts
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_56));
   s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_24));
 
-  // Load image
+  // Image
   s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER);
-  int image_height = gbitmap_get_bounds(s_image_bitmap).size.h;
 
-  // Center the time + date block vertically
+  // Layout
+  int time_height = 56;
   int date_height = 30;
-  int block_height = 56 + date_height;
-  int time_y = (bounds.size.h / 2) - (block_height / 2) - 56;
-  int image_y = time_y + 80;
-  int date_y = image_y + image_height;
 
-  // Create BitmapLayer
-  s_image_layer = bitmap_layer_create(
-      GRect(0, image_y, bounds.size.w, image_height));
+  // Time pinned to top edge
+  int time_y = -8;
+  s_time_layer = text_layer_create(GRect(0, time_y, bounds.size.w, time_height));
+  text_layer_set_background_color(s_time_layer, GColorClear);
+  text_layer_set_text_color(s_time_layer, GColorWhite);
+  text_layer_set_font(s_time_layer, s_time_font);
+  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
+  // Date pinned to bottom edge
+  int date_y = bounds.size.h - date_height;
+  s_date_layer = text_layer_create(GRect(0, date_y, bounds.size.w, date_height));
+  text_layer_set_background_color(s_date_layer, GColorClear);
+  text_layer_set_text_color(s_date_layer, GColorWhite);
+  text_layer_set_font(s_date_layer, s_date_font);
+  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
+
+  // Image centered in the space between time and date
+  int image_y = time_y + time_height;
+  int image_h = date_y - image_y;
+
+  s_image_layer = bitmap_layer_create(GRect(0, image_y, bounds.size.w, image_h));
   bitmap_layer_set_background_color(s_image_layer, GColorClear);
   bitmap_layer_set_bitmap(s_image_layer, s_image_bitmap);
   bitmap_layer_set_compositing_mode(s_image_layer, GCompOpSet);
   bitmap_layer_set_alignment(s_image_layer, GAlignCenter);
 
   layer_add_child(window_layer, bitmap_layer_get_layer(s_image_layer));
-  
-  // Create the time TextLayer — centered in the screen
-  s_time_layer = text_layer_create(
-      GRect(0, time_y, bounds.size.w, 60));
-  text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorWhite);
-  text_layer_set_font(s_time_layer, s_time_font);
-  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-
-  // Create the date TextLayer — just below the time
-  s_date_layer = text_layer_create(
-      GRect(0, date_y, bounds.size.w, 30));
-  text_layer_set_background_color(s_date_layer, GColorClear);
-  text_layer_set_text_color(s_date_layer, GColorWhite);
-  text_layer_set_font(s_date_layer, s_date_font);
-  text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
-
-  // Add layers to the Window
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
   layer_add_child(window_layer, text_layer_get_layer(s_date_layer));
 }

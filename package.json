@@ -38,7 +38,6 @@
                 },
                 {
                     "file": "images/white_transparent.png",
-                    "menuIcon": true,
                     "name": "IMAGE_FLIPPER",
                     "targetPlatforms": null,
                     "type": "bitmap"
