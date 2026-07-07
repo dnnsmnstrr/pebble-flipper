@@ -44,16 +44,23 @@ static void load_image() {
         gbitmap_destroy(s_image_bitmap);
     }
     switch (s_settings.image_color) {
-        case 1:
-            s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_ORANGE);
-            break;
-        case 0:
-            s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_BLACK);
-            break;
-        case 2:
-        default:
-            s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_WHITE);
-            break;
+            case 0:
+                // Light: white background, use black flipper for contrast
+                s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_BLACK);
+                break;
+            case 1:
+                // Dark: black background, use white flipper for contrast
+                s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_WHITE);
+                break;
+            case 2:
+                // Orange Light: white flipper on orange background
+                s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_WHITE);
+                break;
+            case 3:
+            default:
+                // Orange Dark: orange flipper on dark background
+                s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_ORANGE);
+                break;
     }
     if (s_image_layer) {
         bitmap_layer_set_bitmap(s_image_layer, s_image_bitmap);
@@ -72,16 +79,35 @@ static void update_settings(void) {
 }
 
 static void apply_color_scheme() {
-    if (s_settings.image_color == 0) {
-        window_set_background_color(s_main_window, GColorWhite);
-        text_layer_set_text_color(s_time_layer, GColorBlack);
-        text_layer_set_text_color(s_date_layer, GColorBlack);
-    } else {
-        window_set_background_color(s_main_window, GColorBlack);
-        text_layer_set_text_color(s_time_layer, GColorWhite);
-        text_layer_set_text_color(s_date_layer, GColorWhite);
+    // Use white background / dark text for the "white" modes
+        // Theme-specific color schemes
+        if (s_settings.image_color == 0) {
+            // Light: white background, dark text
+            window_set_background_color(s_main_window, GColorWhite);
+            text_layer_set_text_color(s_time_layer, GColorBlack);
+            text_layer_set_text_color(s_date_layer, GColorBlack);
+        } else if (s_settings.image_color == 2) {
+            // Orange Light: orange background, white text
+            window_set_background_color(s_main_window, GColorOrange);
+            text_layer_set_text_color(s_time_layer, GColorWhite);
+            text_layer_set_text_color(s_date_layer, GColorWhite);
+        } else if (s_settings.image_color == 1) {
+            // Dark: black background, white text
+            window_set_background_color(s_main_window, GColorBlack);
+            text_layer_set_text_color(s_time_layer, GColorWhite);
+            text_layer_set_text_color(s_date_layer, GColorWhite);
+        } else if (s_settings.image_color == 3) {
+            // Orange Dark: black background, orange text
+            window_set_background_color(s_main_window, GColorBlack);
+            text_layer_set_text_color(s_time_layer, GColorOrange);
+            text_layer_set_text_color(s_date_layer, GColorOrange);
+        } else {
+            // Fallback: black background, white text
+            window_set_background_color(s_main_window, GColorBlack);
+            text_layer_set_text_color(s_time_layer, GColorWhite);
+            text_layer_set_text_color(s_date_layer, GColorWhite);
+        }
     }
-}
 
 static void inbox_received_callback(DictionaryIterator *iter, void *context) {
     int settings_changed = 0;

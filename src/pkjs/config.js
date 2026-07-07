@@ -9,12 +9,13 @@ module.exports = [
       {
         type: "radiogroup",
         messageKey: "IMAGE_COLOR",
-        label: "Flipper color",
+        label: "Theme",
         defaultValue: 0,
         options: [
-          { label: "Black", value: 0 },
-          { label: "Orange", value: 1 },
-          { label: "White", value: 2 },
+            { label: "Light", value: 0 },
+            { label: "Dark", value: 1 },
+            { label: "Orange Light", value: 2 },
+            { label: "Orange Dark", value: 3 },
         ],
       },
     ],
