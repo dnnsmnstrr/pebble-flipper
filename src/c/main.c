@@ -82,9 +82,18 @@ static void apply_color_scheme() {
 }
 
 static void inbox_received_callback(DictionaryIterator *iter, void *context) {
-    Tuple *t = dict_find(iter, KEY_IMAGE_COLOR);
-    if (t) {
-        s_settings.image_color = t->value->uint8;
+    int settings_changed = 0;
+    Tuple *t = dict_read_first(iter);
+
+    while (t != NULL) {
+        if (t->key == KEY_IMAGE_COLOR) {
+            s_settings.image_color = t->value->uint8;
+            settings_changed = 1;
+        }
+        t = dict_read_next(iter);
+    }
+
+    if (settings_changed) {
         update_settings();
     }
 }
