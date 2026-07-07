@@ -1,14 +1,21 @@
 {
     "author": "Dennis Muensterer",
-    "dependencies": {},
+    "dependencies": {
+        "@rebble/clay": "^1.0.10"
+    },
     "keywords": [
         "pebble-app"
     ],
     "name": "flipper",
     "pebble": {
+        "capabilities": [
+            "configurable"
+        ],
         "displayName": "Flipper Zero",
         "enableMultiJS": true,
-        "messageKeys": ["IMAGE_COLOR"],
+        "messageKeys": [
+            "IMAGE_COLOR"
+        ],
         "projectType": "native",
         "resources": {
             "media": [
@@ -32,15 +39,21 @@
                 },
                 {
                     "file": "fonts/haxrcorp-4089.ttf",
-                    "name": "FONT_HAXR_32",
+                    "name": "FONT_HAXR_56",
                     "targetPlatforms": null,
                     "type": "font"
                 },
                 {
                     "file": "fonts/haxrcorp-4089.ttf",
-                    "name": "FONT_HAXR_56",
+                    "name": "FONT_HAXR_32",
                     "targetPlatforms": null,
                     "type": "font"
+                },
+                {
+                    "file": "images/white_transparent.png",
+                    "name": "IMAGE_FLIPPER",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
                 },
                 {
                     "file": "images/white_transparent.png",
@@ -49,14 +62,14 @@
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/orange_transparent.png",
-                    "name": "IMAGE_FLIPPER_ORANGE",
+                    "file": "images/black_transparent.png",
+                    "name": "IMAGE_FLIPPER_BLACK",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
-                    "file": "images/black_transparent.png",
-                    "name": "IMAGE_FLIPPER_BLACK",
+                    "file": "images/orange_transparent.png",
+                    "name": "IMAGE_FLIPPER_ORANGE",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 }
