@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include <stdlib.h>
 
 extern uint32_t MESSAGE_KEY_IMAGE_COLOR;
 
@@ -46,9 +47,10 @@ static void load_image() {
         case 1:
             s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_ORANGE);
             break;
-        case 2:
+        case 0:
             s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_BLACK);
             break;
+        case 2:
         default:
             s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_WHITE);
             break;
@@ -70,7 +72,7 @@ static void update_settings(void) {
 }
 
 static void apply_color_scheme() {
-    if (s_settings.image_color == 2) {
+    if (s_settings.image_color == 0) {
         window_set_background_color(s_main_window, GColorWhite);
         text_layer_set_text_color(s_time_layer, GColorBlack);
         text_layer_set_text_color(s_date_layer, GColorBlack);
@@ -87,7 +89,13 @@ static void inbox_received_callback(DictionaryIterator *iter, void *context) {
 
     while (t != NULL) {
         if (t->key == KEY_IMAGE_COLOR) {
-            s_settings.image_color = t->value->uint8;
+            if (t->type == TUPLE_CSTRING) {
+                s_settings.image_color = atoi(t->value->cstring);
+            } else if (t->type == TUPLE_INT) {
+                s_settings.image_color = (int)t->value->int32;
+            } else if (t->type == TUPLE_UINT) {
+                s_settings.image_color = (int)t->value->uint32;
+            }
             settings_changed = 1;
         }
         t = dict_read_next(iter);
