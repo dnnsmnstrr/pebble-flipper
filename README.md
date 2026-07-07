@@ -24,6 +24,10 @@ pebble install --phone <IP>
 
 Single-file C app using Pebble SDK 3. Custom fonts (Haxrcorp-4089, Jersey10) and a Flipper Zero image are bundled as resources.
 
+### Asset Source
+
+- [Flipper Zero Downloads](https://flipper.net/pages/downloads#downloads-page-graphics-template--18996016316569__downloads-page-graphics)
+
 ## License
 
 MIT

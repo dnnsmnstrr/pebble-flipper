@@ -8,7 +8,7 @@
     "pebble": {
         "displayName": "Flipper Zero",
         "enableMultiJS": true,
-        "messageKeys": [],
+        "messageKeys": ["IMAGE_COLOR"],
         "projectType": "native",
         "resources": {
             "media": [
@@ -38,7 +38,19 @@
                 },
                 {
                     "file": "images/white_transparent.png",
-                    "name": "IMAGE_FLIPPER",
+                    "name": "IMAGE_FLIPPER_WHITE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/orange_transparent.png",
+                    "name": "IMAGE_FLIPPER_ORANGE",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/black_transparent.png",
+                    "name": "IMAGE_FLIPPER_BLACK",
                     "targetPlatforms": null,
                     "type": "bitmap"
                 }
