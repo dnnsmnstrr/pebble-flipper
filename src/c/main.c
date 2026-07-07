@@ -1,5 +1,7 @@
 #include <pebble.h>
 
+extern uint32_t MESSAGE_KEY_IMAGE_COLOR;
+
 static Window *s_main_window;
 static TextLayer *s_time_layer;
 static TextLayer *s_date_layer;
@@ -11,7 +13,7 @@ static GFont s_date_font;
 
 static int s_image_color = 0;
 
-#define KEY_IMAGE_COLOR 0
+#define KEY_IMAGE_COLOR MESSAGE_KEY_IMAGE_COLOR
 #define PERSIST_KEY_IMAGE_COLOR 1
 
 static void load_image() {
@@ -29,7 +31,9 @@ static void load_image() {
             s_image_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_FLIPPER_WHITE);
             break;
     }
-    bitmap_layer_set_bitmap(s_image_layer, s_image_bitmap);
+    if (s_image_layer) {
+        bitmap_layer_set_bitmap(s_image_layer, s_image_bitmap);
+    }
 }
 
 static void apply_color_scheme() {
@@ -84,29 +88,29 @@ static void main_window_load(Window *window) {
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_bounds(window_layer);
 
-    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_56));
-    s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_24));
+    s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_JERSEY_56));
+    s_date_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_HAXR_32));
 
     s_image_color = persist_exists(PERSIST_KEY_IMAGE_COLOR) ? persist_read_int(PERSIST_KEY_IMAGE_COLOR) : 0;
 
     int time_height = 56;
-    int date_height = 30;
-    int time_y = -8;
+    int date_height = 40;
+    int time_y = -4;
 
     s_time_layer = text_layer_create(GRect(0, time_y, bounds.size.w, time_height));
     text_layer_set_background_color(s_time_layer, GColorClear);
     text_layer_set_font(s_time_layer, s_time_font);
     text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
-    int date_y = bounds.size.h - date_height;
+    int date_y = bounds.size.h - date_height - 6;
     s_date_layer = text_layer_create(GRect(0, date_y, bounds.size.w, date_height));
     text_layer_set_background_color(s_date_layer, GColorClear);
     text_layer_set_font(s_date_layer, s_date_font);
     text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
 
-    int image_y = time_y + time_height;
-    int image_h = date_y - image_y;
-    s_image_layer = bitmap_layer_create(GRect(0, image_y, bounds.size.w, image_h));
+    int image_y = time_y + time_height + 4;
+    int image_h = date_y - image_y - 4;
+    s_image_layer = bitmap_layer_create(GRect(8, image_y, bounds.size.w - 16, image_h));
     bitmap_layer_set_background_color(s_image_layer, GColorClear);
     bitmap_layer_set_compositing_mode(s_image_layer, GCompOpSet);
     bitmap_layer_set_alignment(s_image_layer, GAlignCenter);

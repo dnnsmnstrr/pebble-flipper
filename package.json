@@ -32,6 +32,12 @@
                 },
                 {
                     "file": "fonts/haxrcorp-4089.ttf",
+                    "name": "FONT_HAXR_32",
+                    "targetPlatforms": null,
+                    "type": "font"
+                },
+                {
+                    "file": "fonts/haxrcorp-4089.ttf",
                     "name": "FONT_HAXR_56",
                     "targetPlatforms": null,
                     "type": "font"
