@@ -86,11 +86,11 @@ static void apply_color_scheme() {
             window_set_background_color(s_main_window, GColorWhite);
             text_layer_set_text_color(s_time_layer, GColorBlack);
             text_layer_set_text_color(s_date_layer, GColorBlack);
-        } else if (s_settings.image_color == 2) {
-            // Orange Light: orange background, white text
-            window_set_background_color(s_main_window, GColorOrange);
-            text_layer_set_text_color(s_time_layer, GColorWhite);
-            text_layer_set_text_color(s_date_layer, GColorWhite);
+                } else if (s_settings.image_color == 2) {
+                    // Orange Light: original darker orange background, white text
+                    window_set_background_color(s_main_window, GColorOrange);
+                    text_layer_set_text_color(s_time_layer, GColorWhite);
+                    text_layer_set_text_color(s_date_layer, GColorWhite);
         } else if (s_settings.image_color == 1) {
             // Dark: black background, white text
             window_set_background_color(s_main_window, GColorBlack);
@@ -99,8 +99,8 @@ static void apply_color_scheme() {
         } else if (s_settings.image_color == 3) {
             // Orange Dark: black background, orange text
             window_set_background_color(s_main_window, GColorBlack);
-            text_layer_set_text_color(s_time_layer, GColorOrange);
-            text_layer_set_text_color(s_date_layer, GColorOrange);
+            text_layer_set_text_color(s_time_layer, GColorFromHEX(0xFF8200));
+            text_layer_set_text_color(s_date_layer, GColorFromHEX(0xFF8200));
         } else {
             // Fallback: black background, white text
             window_set_background_color(s_main_window, GColorBlack);
